@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.azcona.socialmediaApp.jpa.PostRepository;
 import com.azcona.socialmediaApp.jpa.UserRepository;
 
 import jakarta.validation.Valid;
@@ -21,9 +22,11 @@ import jakarta.validation.Valid;
 public class UserJpaResource {
 
 	private UserRepository userRepository;
+	private PostRepository postRepository;
 
-	public UserJpaResource(UserDaoService theService, UserRepository theUserRepository) {
+	public UserJpaResource(UserRepository theUserRepository, PostRepository thePostRepository) {
 		this.userRepository = theUserRepository;
+		this.postRepository = thePostRepository;
 	}
 
 	// GET
@@ -66,10 +69,30 @@ public class UserJpaResource {
 		return ResponseEntity.created(location).build();
 	}
 
+	@PostMapping("/jpa/users/{id}/posts")
+	public ResponseEntity<Object> createPostForUser(@PathVariable int id, @Valid @RequestBody Post post) {
+		Optional<User> user = userRepository.findById(id);
+
+		if (user.isEmpty()) {
+			throw new UserNotFoundException("id: " + id);
+		}
+
+		post.setUser(user.get());
+
+		Post savedPost = postRepository.save(post);
+
+		// To retrieve the URI of the POST request
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedPost.getId())
+				.toUri();
+
+		return ResponseEntity.created(location).build();
+	}
+
 	// DELETE
 	@DeleteMapping("/jpa/users/{id}")
 	public void deleteUser(@PathVariable int id) {
 		userRepository.deleteById(id);
 	}
 
+	// FALTA METODOS PARA BORRAR UN POST O TODOS LOS POST
 }
