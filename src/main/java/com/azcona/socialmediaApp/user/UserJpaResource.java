@@ -49,7 +49,7 @@ public class UserJpaResource {
 	// POST
 	@PostMapping("/jpa/users")
 	public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
-		User savedUser = userService.saveUser(user);
+		User savedUser = userRepository.save(user);
 
 		// To retrieve the URI of the POST request
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedUser.getId())
@@ -61,7 +61,7 @@ public class UserJpaResource {
 	// DELETE
 	@DeleteMapping("/jpa/users/{id}")
 	public void deleteUser(@PathVariable int id) {
-		userService.deleteById(id);
+		userRepository.deleteById(id);
 	}
 
 }
