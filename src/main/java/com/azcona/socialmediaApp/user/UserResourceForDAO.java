@@ -15,11 +15,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import jakarta.validation.Valid;
 
 @RestController
-public class UserController {
+public class UserResourceForDAO {
 
 	private UserDaoService userService;
 
-	public UserController(UserDaoService theService) {
+	public UserResourceForDAO(UserDaoService theService) {
 		this.userService = theService;
 	}
 

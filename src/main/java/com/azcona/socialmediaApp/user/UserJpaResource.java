@@ -94,5 +94,10 @@ public class UserJpaResource {
 		userRepository.deleteById(id);
 	}
 
-	// FALTA METODOS PARA BORRAR UN POST O TODOS LOS POST
+	// CHECK IF THIS METHOD is OK
+	@DeleteMapping("/jpa/users/{id}/posts/{postId}")
+	public void deletePostForUser(@PathVariable int postId) {
+		postRepository.deleteById(postId);
+	}
+
 }
